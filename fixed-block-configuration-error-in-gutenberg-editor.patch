@@ -1,0 +1,42 @@
+diff --git a/src/FlipClockManager.php b/src/FlipClockManager.php
+index 9d639f7..abc0bf5 100644
+--- a/src/FlipClockManager.php
++++ b/src/FlipClockManager.php
+@@ -27,6 +27,8 @@ class FlipClockManager {
+       'pt-br' => 'Portugese',
+       'ru-ru' => 'Russian',
+       'sv-se' => 'Swedish',
++      'zh-cn' => 'Chinese',
++      'zh-tw' => 'TraditionalChinese',
+     ];
+   }
+ 
+diff --git a/src/Plugin/Block/FlipClockBlock.php b/src/Plugin/Block/FlipClockBlock.php
+index 023c31c..94d5bdb 100644
+--- a/src/Plugin/Block/FlipClockBlock.php
++++ b/src/Plugin/Block/FlipClockBlock.php
+@@ -112,9 +112,16 @@ class FlipClockBlock extends BlockBase implements BlockPluginInterface {
+    */
+   public function build() {
+     $id = 'flipclock-' . uniqid();
++    if (is_array($this->configuration['date']) && isset($this->configuration['date']['date'])
++      && isset($this->configuration['date']['time'])) {
++      $date = (int) strtotime($this->configuration['date']['date'] . 'T' . $this->configuration['date']['time']);
++    }
++    else {
++      $date = (int) strtotime($this->configuration['date']);
++    }
+ 
+     $instance = [
+-      'timestamp' => (int) strtotime($this->configuration['date']),
++      'timestamp' => $date,
+       'options' => [
+         'clockFace' => $this->configuration['clock_face'],
+         'autoPlay' => ($this->configuration['auto_play']) ? TRUE : FALSE,
+@@ -139,4 +146,4 @@ class FlipClockBlock extends BlockBase implements BlockPluginInterface {
+   }
+ 
+ 
+-}
+\ No newline at end of file
++}
